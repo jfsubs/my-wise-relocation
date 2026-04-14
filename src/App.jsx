@@ -566,7 +566,7 @@ export default function MyWiseRelocate() {
   const educationRank = EDUCATION_LEVELS.find(e => e.id === profile.education)?.rank || 0;
 
   const results = useMemo(() => {
-    if (step < 3) return [];
+    if (step < 4) return [];
     return COUNTRIES
       .filter(c => profile.region === "All" || c.region === profile.region)
       .map(country => {
@@ -592,6 +592,84 @@ export default function MyWiseRelocate() {
   const changeStep = (n) => { setAnimateIn(false); setTimeout(() => setStep(n), 150); };
   const compareData = results.filter(r => compareList.includes(r.name));
 
+
+  const totalVisas = COUNTRIES.reduce((sum, c) => sum + c.visas.length, 0);
+
+  const renderLanding = () => (
+    <div role="region" aria-label="Welcome">
+      <div style={S.hero}>
+        <div style={S.heroInner}>
+          <p style={S.heroEyebrow}>VISA PATHWAY FINDER FOR US CITIZENS</p>
+          <h2 style={S.heroTitle} ref={stepHeadingRef} tabIndex={-1}>Find your path to a new home abroad</h2>
+          <p style={S.heroDesc}>Discover which countries match your goals, compare visa options side by side, and connect directly with official government immigration portals — all in one place.</p>
+          <button style={S.heroCta} onClick={() => changeStep(1)}>Start exploring</button>
+        </div>
+      </div>
+
+      <div style={S.statsBar} role="region" aria-label="Tool coverage">
+        <div style={S.statItem}><span style={S.statNumber}>{COUNTRIES.length}</span><span style={S.statLabel}>Countries</span></div>
+        <div style={S.statDivider} aria-hidden="true" />
+        <div style={S.statItem}><span style={S.statNumber}>{totalVisas}+</span><span style={S.statLabel}>Visa Pathways</span></div>
+        <div style={S.statDivider} aria-hidden="true" />
+        <div style={S.statItem}><span style={S.statNumber}>6</span><span style={S.statLabel}>Regions</span></div>
+        <div style={S.statDivider} aria-hidden="true" />
+        <div style={S.statItem}><span style={S.statNumber}>100%</span><span style={S.statLabel}>Free to Use</span></div>
+      </div>
+
+      <div style={S.landingSection}>
+        <h3 style={S.sectionTitle}>HOW IT WORKS</h3>
+        <div style={S.stepsGrid}>
+          <div style={S.stepCard}>
+            <div style={S.stepCardNumber} aria-hidden="true">1</div>
+            <h4 style={S.stepCardTitle}>Tell us your goals</h4>
+            <p style={S.stepCardDesc}>Select the visa types that interest you, share your professional background, and rate what matters most — affordability, safety, healthcare, or path to residency.</p>
+          </div>
+          <div style={S.stepCard}>
+            <div style={S.stepCardNumber} aria-hidden="true">2</div>
+            <h4 style={S.stepCardTitle}>Get matched</h4>
+            <p style={S.stepCardDesc}>Our weighted matching algorithm scores every country against your priorities and filters visa options based on your education, field, and family situation.</p>
+          </div>
+          <div style={S.stepCard}>
+            <div style={S.stepCardNumber} aria-hidden="true">3</div>
+            <h4 style={S.stepCardTitle}>Research and take action</h4>
+            <p style={S.stepCardDesc}>Compare countries side by side, explore detailed visa requirements with processing times and costs, and link directly to official government immigration portals.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style={S.landingSection}>
+        <h3 style={S.sectionTitle}>WHAT YOU GET</h3>
+        <div style={S.featuresGrid}>
+          <div style={S.featureCard}>
+            <span style={S.featureIcon} aria-hidden="true">🎯</span>
+            <h4 style={S.featureTitle}>Personalized matching</h4>
+            <p style={S.featureDesc}>Results weighted to your priorities, not a generic list. Adjust what matters and watch your matches change in real time.</p>
+          </div>
+          <div style={S.featureCard}>
+            <span style={S.featureIcon} aria-hidden="true">📋</span>
+            <h4 style={S.featureTitle}>Real visa data</h4>
+            <p style={S.featureDesc}>Processing times, application costs, education requirements, and estimated years to permanent residency for every pathway.</p>
+          </div>
+          <div style={S.featureCard}>
+            <span style={S.featureIcon} aria-hidden="true">🏛️</span>
+            <h4 style={S.featureTitle}>Official government links</h4>
+            <p style={S.featureDesc}>Every visa option links directly to the relevant national immigration agency so you can verify details and begin your application.</p>
+          </div>
+          <div style={S.featureCard}>
+            <span style={S.featureIcon} aria-hidden="true">⚖️</span>
+            <h4 style={S.featureTitle}>Side-by-side comparison</h4>
+            <p style={S.featureDesc}>Select up to three countries and compare them across affordability, healthcare, safety, English-friendliness, and path to residency.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style={S.landingCta}>
+        <p style={S.landingCtaText}>Ready to discover where you belong?</p>
+        <button style={S.heroCta} onClick={() => changeStep(1)}>Start your search</button>
+      </div>
+    </div>
+  );
+
   const renderStep0 = () => (
     <div role="region" aria-label="Step 1: Visa type selection">
       <h2 style={S.stepTitle} ref={stepHeadingRef} tabIndex={-1}>What type of visa are you looking for?</h2>
@@ -606,7 +684,7 @@ export default function MyWiseRelocate() {
         ))}
       </div>
       <div style={S.navRow}><div />
-        <button style={S.btnPrimary} onClick={() => changeStep(1)}>{profile.categories.length === 0 ? "Show all visa types" : "Next step"}</button>
+        <button style={S.btnPrimary} onClick={() => changeStep(2)}>{profile.categories.length === 0 ? "Show all visa types" : "Next step"}</button>
       </div>
     </div>
   );
@@ -632,8 +710,8 @@ export default function MyWiseRelocate() {
         </div>
       </fieldset>
       <div style={S.navRow}>
-        <button style={S.btnSecondary} onClick={() => changeStep(0)}>Back</button>
-        <button style={S.btnPrimary} onClick={() => changeStep(2)}>Next step</button>
+        <button style={S.btnSecondary} onClick={() => changeStep(1)}>Back</button>
+        <button style={S.btnPrimary} onClick={() => changeStep(3)}>Next step</button>
       </div>
     </div>
   );
@@ -657,8 +735,8 @@ export default function MyWiseRelocate() {
         </div>
       ))}
       <div style={S.navRow}>
-        <button style={S.btnSecondary} onClick={() => changeStep(1)}>Back</button>
-        <button style={S.btnPrimary} onClick={() => changeStep(3)}>See results</button>
+        <button style={S.btnSecondary} onClick={() => changeStep(2)}>Back</button>
+        <button style={S.btnPrimary} onClick={() => changeStep(4)}>See results</button>
       </div>
     </div>
   );
@@ -774,7 +852,7 @@ export default function MyWiseRelocate() {
       <a href="#main-content" style={S.skipLink}>Skip to main content</a>
       <header style={S.header} role="banner">
         <div style={S.headerInner}>
-          <div style={S.logoArea}>
+          <div role="button" tabIndex={0} onClick={() => {setStep(0);setExpandedCountry(null);setExpandedVisa(null);setCompareList([]);setShowCompare(false);}} onKeyDown={(e) => {if(e.key==="Enter"||e.key===" "){e.preventDefault();setStep(0);setExpandedCountry(null);setExpandedVisa(null);setCompareList([]);setShowCompare(false);}}} aria-label="Return to home page" style={{...S.logoArea,cursor:"pointer"}}>
             <svg aria-hidden="true" width="32" height="32" viewBox="0 0 30 30" fill="none" style={{flexShrink:0}}>
               <circle cx="15" cy="15" r="13" stroke="#8B6D2E" strokeWidth="1.2"/>
               <circle cx="15" cy="15" r="3.5" fill="#8B6D2E"/>
@@ -785,13 +863,13 @@ export default function MyWiseRelocate() {
             </svg>
             <div><h1 style={S.logoTitle}>MY WISE RELOCATION</h1><p style={S.logoSub}>Visa Pathway Finder for US Citizens</p></div>
           </div>
-          {step < 3 && (
+          {step >= 1 && step < 4 && (
             <nav aria-label="Progress" style={S.stepper}>
               <ol style={{display:"flex",gap:24,listStyle:"none",margin:0,padding:0}}>
                 {["Visa type","Profile","Priorities"].map((s,i) => (
-                  <li key={i} style={{...S.stepDot,...(i<=step?S.stepDotActive:{})}} aria-current={i===step?"step":undefined}>
-                    <div aria-hidden="true" style={{...S.dot,...(i<=step?S.dotActive:{})}}>{i+1}</div>
-                    <span style={S.stepLabelText}><span className="sr-only">{i<step?"Completed: ":i===step?"Current: ":"Upcoming: "}</span>{s}</span>
+                  <li key={i} style={{...S.stepDot,...(i<=step-1?S.stepDotActive:{})}} aria-current={i===step-1?"step":undefined}>
+                    <div aria-hidden="true" style={{...S.dot,...(i<=step-1?S.dotActive:{})}}>{i+1}</div>
+                    <span style={S.stepLabelText}><span className="sr-only">{i<step-1?"Completed: ":i===step-1?"Current: ":"Upcoming: "}</span>{s}</span>
                   </li>
                 ))}
               </ol>
@@ -799,16 +877,18 @@ export default function MyWiseRelocate() {
           )}
         </div>
       </header>
-      <main id="main-content" style={S.main} role="main">
+      <main id="main-content" style={step === 0 ? S.mainLanding : S.main} role="main">
         <div style={{animation: animateIn ? "fadeSlideIn 0.35s ease-out forwards" : "none"}}>
-          {step === 0 && renderStep0()}
-          {step === 1 && renderStep1()}
-          {step === 2 && renderStep2()}
-          {step === 3 && renderResults()}
+          {step === 0 && renderLanding()}
+          {step === 1 && renderStep0()}
+          {step === 2 && renderStep1()}
+          {step === 3 && renderStep2()}
+          {step === 4 && renderResults()}
         </div>
       </main>
       <footer style={S.footer} role="contentinfo">
-        <p>My Wise Relocation is for informational purposes only and does not constitute legal or immigration advice. Visa requirements change frequently — always verify with official government sources. A product of the My Wise Travel family.</p>
+        <p>My Wise Relocation is for informational purposes only and does not constitute legal or immigration advice. Visa requirements change frequently — always verify with official government sources.</p>
+        <p style={{marginTop:8}}>A product of the <a href="https://mywisetravel.com" target="_blank" rel="noopener noreferrer" style={{color:"#8B6D2E",textDecoration:"none",borderBottom:"1px solid #8B6D2E"}}>My Wise Travel</a> family.</p>
       </footer>
     </div>
   );
@@ -816,6 +896,33 @@ export default function MyWiseRelocate() {
 
 const S = {
   page:{fontFamily:"Georgia,'Times New Roman',serif",minHeight:"100vh",background:"linear-gradient(175deg,#FAF8F4 0%,#F3F1EB 40%,#F8F9FC 100%)",color:"#1E2330",display:"flex",flexDirection:"column"},
+
+  mainLanding:{flex:1,width:"100%"},
+  hero:{background:"linear-gradient(175deg,#F0EDE6 0%,#F3F1EB 40%,#FAF8F4 100%)",padding:"80px 24px 60px",textAlign:"center",borderBottom:"1px solid rgba(139,109,46,0.12)"},
+  heroInner:{maxWidth:680,margin:"0 auto"},
+  heroEyebrow:{fontSize:11,letterSpacing:"0.2em",color:"#8B6D2E",marginBottom:16,fontWeight:"normal"},
+  heroTitle:{fontFamily:"Georgia,'Times New Roman',serif",fontSize:"clamp(28px,5vw,44px)",color:"#1E2330",marginBottom:20,outline:"none",letterSpacing:"0.02em",fontWeight:"normal",lineHeight:1.25},
+  heroDesc:{fontSize:16,color:"#5a564d",lineHeight:1.7,marginBottom:36,maxWidth:560,margin:"0 auto 36px"},
+  heroCta:{padding:"14px 36px",borderRadius:6,border:"none",background:"#8B6D2E",color:"#F8F9FC",fontSize:15,fontWeight:"normal",cursor:"pointer",boxShadow:"0 2px 8px rgba(139,109,46,0.25)",letterSpacing:"0.12em",transition:"background 0.2s"},
+  statsBar:{display:"flex",justifyContent:"center",alignItems:"center",gap:"clamp(16px,4vw,40px)",padding:"28px 24px",background:"#FFFFFF",borderBottom:"1px solid rgba(44,42,37,0.08)",flexWrap:"wrap"},
+  statItem:{display:"flex",flexDirection:"column",alignItems:"center",gap:4},
+  statNumber:{fontSize:24,fontWeight:600,color:"#8B6D2E",letterSpacing:"0.03em"},
+  statLabel:{fontSize:11,color:"#7A756B",letterSpacing:"0.1em",textTransform:"uppercase"},
+  statDivider:{width:1,height:36,background:"rgba(44,42,37,0.12)"},
+  landingSection:{maxWidth:860,margin:"0 auto",padding:"48px 24px"},
+  sectionTitle:{fontSize:12,letterSpacing:"0.18em",color:"#8B6D2E",marginBottom:28,textAlign:"center",fontWeight:"normal"},
+  stepsGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:20},
+  stepCard:{background:"#FFFFFF",borderRadius:8,padding:"28px 24px",border:"1px solid rgba(44,42,37,0.08)",textAlign:"center"},
+  stepCardNumber:{width:36,height:36,borderRadius:"50%",background:"rgba(139,109,46,0.08)",color:"#8B6D2E",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:600,marginBottom:14,border:"1.5px solid rgba(139,109,46,0.2)"},
+  stepCardTitle:{fontSize:16,color:"#1E2330",marginBottom:8,fontWeight:"normal",letterSpacing:"0.02em"},
+  stepCardDesc:{fontSize:13,color:"#5a564d",lineHeight:1.65},
+  featuresGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:16},
+  featureCard:{background:"#FFFFFF",borderRadius:8,padding:"24px 20px",border:"1px solid rgba(44,42,37,0.08)"},
+  featureIcon:{fontSize:24,display:"block",marginBottom:10},
+  featureTitle:{fontSize:14,color:"#1E2330",marginBottom:6,fontWeight:600,letterSpacing:"0.02em"},
+  featureDesc:{fontSize:13,color:"#5a564d",lineHeight:1.6},
+  landingCta:{textAlign:"center",padding:"32px 24px 56px",background:"rgba(139,109,46,0.03)",borderTop:"1px solid rgba(139,109,46,0.08)"},
+  landingCtaText:{fontSize:18,color:"#1E2330",marginBottom:20,fontFamily:"Georgia,'Times New Roman',serif",letterSpacing:"0.02em"},
   skipLink:{position:"absolute",left:"-9999px",top:"auto",width:"1px",height:"1px",overflow:"hidden",zIndex:1000,background:"#1E2330",color:"#F8F9FC",padding:"12px 24px",fontSize:16,fontWeight:600,textDecoration:"none",borderRadius:4},
   header:{background:"#FFFFFF",padding:"0",borderBottom:"1px solid rgba(44,42,37,0.12)",boxShadow:"0 1px 4px rgba(0,0,0,0.04)"},
   headerInner:{maxWidth:960,margin:"0 auto",padding:"18px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12},
