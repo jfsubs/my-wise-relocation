@@ -557,11 +557,40 @@ export default function MyWiseRelocate() {
   const [showCompare, setShowCompare] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
   const stepHeadingRef = useRef(null);
+  const isPopping = useRef(false);   // true while a popstate restore is in flight
+  const hasMounted = useRef(false);  // false on first render so we replaceState instead of pushState
 
   useEffect(() => {
     setAnimateIn(true);
     if (stepHeadingRef.current) stepHeadingRef.current.focus();
   }, [step]);
+
+  /* ---------- Browser history sync ----------
+     Pushes a history entry on every step change so Back/Forward work.
+     isPopping suppresses the reciprocal pushState when popstate restores state. */
+  useEffect(() => {
+    if (isPopping.current) {
+      isPopping.current = false;
+      return;
+    }
+    if (!hasMounted.current) {
+      window.history.replaceState({ step }, "");
+      hasMounted.current = true;
+    } else {
+      window.history.pushState({ step }, "");
+    }
+  }, [step]);
+
+  useEffect(() => {
+    const handlePop = (e) => {
+      const s = e.state;
+      if (!s) return;
+      isPopping.current = true;
+      setStep(s.step ?? 0);
+    };
+    window.addEventListener("popstate", handlePop);
+    return () => window.removeEventListener("popstate", handlePop);
+  }, []);
 
   const educationRank = EDUCATION_LEVELS.find(e => e.id === profile.education)?.rank || 0;
 
